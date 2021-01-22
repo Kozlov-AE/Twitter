@@ -34,7 +34,14 @@ class Twitter {
         const textElem = document.querySelector(text);
         const imgBtnElem = document.querySelector(imgBtn);
         const submitBtnElem = document.querySelector(submitBtn);
-        let imgUrl =''
+        let imgUrl ='';
+        let tmpString = textElem.innerHTML;
+
+        textElem.addEventListener('click', () => {
+            if(textElem.innerHTML === tmpString) {
+                textElem.innerHTML = '';
+            }
+        })
 
         submitBtnElem.addEventListener('click', () => {
             this.tweets.addPost({
@@ -44,9 +51,14 @@ class Twitter {
                 img: imgUrl,
             })
             this.showAllPosts();
+            textElem.innerHTML = tmpString;
+            this.handlerModal.closeModal();
         })
 
-    }
+        imgBtnElem.addEventListener('click', () => {
+            imgUrl = prompt(`Введи адрес картинки`)
+    });
+}
 
     renderPosts(tweets){
         this.elements.listElem.textContent = '';
@@ -102,7 +114,7 @@ class Twitter {
             modalElem.style.display = 'block'; 
         }
 
-        const closeModal = (elem,event) => {
+        const closeModal = (elem, event) => {
             const target = event.target;
             if(target === elem){
                 modalElem.style.display = 'none';
@@ -116,6 +128,10 @@ class Twitter {
 
         if(overlayElem){
             overlayElem.addEventListener('click', closeModal.bind(null, overlayElem));
+        }
+        
+        this.handlerModal.closeModal = () => {
+            modalElem.style.display = 'none';
         }
     }
 
@@ -191,6 +207,7 @@ const twitter = new Twitter({
             modal: '.modal',
             overlay: '.overlay',
             close: '.modal-close__btn',
+            welcomeString: '.welcome_string',
         }
     ],
     tweetElems: [
@@ -201,6 +218,7 @@ const twitter = new Twitter({
         }
     ]
 });
+
 
 twitter.tweets.deletePost("13");
 twitter.tweets.likePost("12");

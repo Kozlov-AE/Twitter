@@ -72,7 +72,7 @@ class Twitter {
                         <header class="tweet__header">
                             <h3 class="tweet-author">${userName}
                                 <span class="tweet-author__add tweet-author__nickname">@${nickname}</span>
-                                <time class="tweet-author__add tweet__date">${getDate()}</time>
+                                <time class="tweet-author__add tweet__date">${correctDate(getDate)}</time>
                             </h3>
                             <button class="tweet__delete-button chest-icon" data-id = "${id}"></button>
                         </header>
@@ -138,6 +138,13 @@ class Twitter {
     showAllPosts(){
         this.renderPosts(this.tweets.posts);
     }
+
+    correctDate(date){
+        if(isNun(parseDate(date))){
+            date = date.replace(/\./g, '/');
+        }
+        return new Date(date);
+    }
 }
 
 class Posts {
@@ -145,7 +152,6 @@ class Posts {
         this.posts = posts;
     }
     
-
     addPost = tweet => {
         this.posts.push(new Post(tweet));
     }
@@ -161,11 +167,10 @@ class Posts {
 }
 class Post {
     constructor({id, userName, nickname, postDate, text, img, likes = 0}) {
-        
         this.id = id || this.generateGuid();
         this.userName = userName;
         this.nickname = nickname;
-        this.postDate = postDate ? new Date(postDate) : new Date();
+        this.postDate = postDate ? this.correctDate(postDate) : new Date();
         this.text = text;
         this.img = img;
         this.likes = likes;
@@ -215,12 +220,12 @@ const twitter = new Twitter({
             text: '.modal .tweet-form__text',
             imgBtn: '.modal .tweet-img__btn',
             submitBtn: '.modal .tweet-form__btn',
+        },
+        {
+            text: '.tweet-form__text',
+            imgBtn: '.tweet-img__btn',
+            submitBtn: '.tweet-form__btn',
         }
-    ]
+    ],
+
 });
-
-
-twitter.tweets.deletePost("13");
-twitter.tweets.likePost("12");
-console.log('twitter', twitter);
-//console.log('twitter', twitter);
